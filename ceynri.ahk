@@ -4,14 +4,14 @@
 
 ; Notes:  # == win    ! == Alt    ^ == Ctrl    + == Shift
 
-#SingleInstance Force ; 重复启动该脚本时，自动覆盖旧脚本进程
+; 重复启动该脚本时，自动覆盖旧脚本进程
+#SingleInstance Force
 
 ; ---------------------------------------------------------
 ; 创建Chrome浏览器新窗口
 ; ---------------------------------------------------------
 #N::Run "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Google Chrome"
 ; ---------------------------------------------------------
-
 
 ; ---------------------------------------------------------
 ; 常用文件夹的快捷打开方式
@@ -26,14 +26,13 @@
         ; 按下超过300ms，打开docs文件夹
         Run "D:\ceynri\docs"
     }
-    Return
+Return
 #+E::Run "D:\ceynri"
 #+N::Run "D:\ceynri\docs\notes"
 #+T::Run "D:\ceynri\tools"
 #+W::Run "D:\workspace"
 #+Z::Run "C:\Users\yangruichen\Desktop"
 ; ---------------------------------------------------------
-
 
 ; ---------------------------------------------------------
 ; Win + T 当前窗口置顶
@@ -43,7 +42,7 @@
     WinSet, AlwaysOnTop, TOGGLE, A	; A在AutoHotkey里表示当前活动窗口的标题
     ; 获取窗口置顶状态
     WinGet, ExStyle, ExStyle, A
-    If (ExStyle & 0x8) {  ; 0x8 为 WS_EX_TOPMOST.在WinGet的帮助中
+    If (ExStyle & 0x8) { ; 0x8 为 WS_EX_TOPMOST.在WinGet的帮助中
         ToolTip 置顶
     } Else {
         ToolTip 取消置顶
@@ -51,28 +50,29 @@
     Sleep 1000
     ; 关闭 ToolTip 提示
     ToolTip
-    Return
+Return
 ; ---------------------------------------------------------
-
 
 ; ---------------------------------------------------------
 ; 将 CapsLock 替换为 RAlt + CapsLock
 ; ---------------------------------------------------------
-CapsLock::Return ; 禁用大写键
+; 禁用大写键
+CapsLock::Return
+; 左Alt、Ctrl修饰键常与 Capslock 键一同使用，但如果没有按下能与 Capslock 配合的键则会绕过上面的规则触发大写锁定，故禁用
+<!Capslock::Return
+<^Capslock::Return
+; Win/Right Alt + Capslock 代替大写键
 #Capslock::
-RAlt & Capslock::
-Capslock & RAlt::
+>!Capslock::
     isCaps = % GetKeyState("CapsLock", "T")
     If (isCaps) {
         SetCapsLockState, off
-        ToolTip 大写锁定
+        ToolTip
     } Else {
         SetCapsLockState, on
-        ToolTip 取消大写锁定
+        ToolTip Caps Locking
     }
-    Sleep 300
-    ToolTip
-    Return
+Return
 ; ---------------------------------------------------------
 ; 对60%~65%键盘进行F区兼容适配
 ; ---------------------------------------------------------
@@ -117,35 +117,29 @@ Capslock & X::Media_Next
 Capslock & Space::Media_Play_Pause
 ; ---------------------------------------------------------
 
-
 ; ---------------------------------------------------------
 ; Win + R 长按 重启该脚本
 ; ---------------------------------------------------------
 #~R::
-	KeyWait, R
-	If (A_TimeSinceThisHotkey > 300) {
-        ; 关闭“运行”窗口
-        WinClose ahk_class #32770
-        ; 运行脚本
-	    Run "D:\ceynri\tools\ahk\ceynri.ahk"
+    KeyWait, R ; 等待 R 键抬起
+    If (A_TimeSinceThisHotkey > 300) {
+        WinClose ahk_class #32770 ; Win + R 默认会打开运行窗口，关闭之
+        Run "D:\ceynri\tools\ahk\ceynri.ahk" ; 运行脚本（替换成你的脚本位置）
     }
-    Return
+Return
 ; ---------------------------------------------------------
 ; Win + E 长按 修改该脚本
 ; ---------------------------------------------------------
 #~E::
-    ; 短按 Win + E 会打开快速访问窗口
-    KeyWait, E
+    KeyWait, E ; 等待 E 键抬起
     If (A_TimeSinceThisHotkey > 300) {
-        ; 关闭快速访问窗口
-        WinClose ahk_class CabinetWClass
-        ; 使用 vs code 打开脚本
-        Run cmd /K code "D:\ceynri\tools\ahk\ceynri.ahk"
+        WinClose ahk_class CabinetWClass ; Win + R 默认会打开快速访问窗口，关闭之
+        Run cmd /K code "D:\ceynri\tools\ahk\ceynri.ahk" ; 使用 vs code 打开脚本（替换成你的脚本位置）
         ; 延迟2s（取决于电脑运行速度）后，关闭弹出的命令行
         Sleep 2000
         Send !{Tab}
         Sleep 100
         Send {AltDown}{F4}{AltUp}
     }
-    Return
+Return
 ; ---------------------------------------------------------
