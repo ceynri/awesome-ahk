@@ -1,6 +1,8 @@
-; @encode: gbk
-; @Author: ceynri
-; @document: https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
+/**
+ * @encode: gbk
+ * @Author: ceynri
+ * @document: https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
+ */
 
 ; Notes:  # == win    ! == Alt    ^ == Ctrl    + == Shift
 
@@ -117,29 +119,65 @@ Capslock & X::Media_Next
 Capslock & Space::Media_Play_Pause
 ; ---------------------------------------------------------
 
+#IfWinActive, ahk_exe Explorer.EXE ; 仅资源管理器/桌面下有效
+; ---------------------------------------------------------
+; Win + S 获得当前选中文件的路径
+; ---------------------------------------------------------
+#S::
+    Send ^c
+    clipboard = %clipboard%
+    tooltip, %clipboard%
+    sleep, 500
+    tooltip
+    Return
+; ---------------------------------------------------------
+#If ; End #IfWinActive, ahk_exe Explorer.EXE
+
+; ---------------------------------------------------------
+; Win + O 关闭显示器
+; ---------------------------------------------------------
+#O:: 
+Sleep 2000  ; 让用户有机会释放按键 (以防释放它们时再次唤醒显视器).
+SendMessage, 0x112, 0xF170, 2,, Program Manager   ; 关闭显示器: 0x112 为 WM_SYSCOMMAND, 0xF170 为 SC_MONITORPOWER. ; 可使用 -1 代替 2 打开显示器，1 代替 2 激活显示器的节能模式
+return
+; ---------------------------------------------------------
+
+; ---------------------------------------------------------
+; Win + T 当前窗口置顶
+; ---------------------------------------------------------
+#T::
+    winset, AlwaysOnTop, TOGGLE, A	;A在AutoHotkey里表示当前活动窗口的标题
+    WinGet, ExStyle, ExStyle, A
+    if (ExStyle & 0x8)  ; 0x8 为 WS_EX_TOPMOST.在WinGet的帮助中
+        tooltip 置顶
+    else
+        ToolTip 取消置顶
+    Sleep 1000
+    ToolTip
+    Return
+; ---------------------------------------------------------
+
 ; ---------------------------------------------------------
 ; Win + R 长按 重启该脚本
 ; ---------------------------------------------------------
-#~R::
-    KeyWait, R ; 等待 R 键抬起
-    If (A_TimeSinceThisHotkey > 300) {
-        WinClose ahk_class #32770 ; Win + R 默认会打开运行窗口，关闭之
-        Run "D:\ceynri\tools\ahk\ceynri.ahk" ; 运行脚本（替换成你的脚本位置）
+#R::
+	KeyWait, R ; 等待 R 键抬起
+	If (A_TimeSinceThisHotkey > 300) {
+        ToolTip Reload Script
+        Sleep 300
+        ToolTip
+	    Reload
+    } Else {
+        Run "C:\Users\yangruichen\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk"
     }
-Return
+    Return
 ; ---------------------------------------------------------
-; Win + E 长按 修改该脚本
+; Win + E 长按 修改该脚本 （如果想保留原快捷键打开快速访问的效果，可以在E前面加~）
 ; ---------------------------------------------------------
-#~E::
+#E::
     KeyWait, E ; 等待 E 键抬起
     If (A_TimeSinceThisHotkey > 300) {
-        WinClose ahk_class CabinetWClass ; Win + R 默认会打开快速访问窗口，关闭之
-        Run cmd /K code "D:\ceynri\tools\ahk\ceynri.ahk" ; 使用 vs code 打开脚本（替换成你的脚本位置）
-        ; 延迟2s（取决于电脑运行速度）后，关闭弹出的命令行
-        Sleep 2000
-        Send !{Tab}
-        Sleep 100
-        Send {AltDown}{F4}{AltUp}
+        Run "C:\Users\Haze\AppData\Local\Programs\Microsoft VS Code\code.exe" "D:\ceynri\tools\ahk\ceynri.ahk" ; 使用 vs code 打开脚本（替换成你的脚本位置）
     }
 Return
 ; ---------------------------------------------------------
