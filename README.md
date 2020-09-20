@@ -339,11 +339,15 @@ AdjustScreenBrightness(step) {
 按键：Win + R 长按
 
 ```ahk
-#~R::
-    KeyWait, R ; 等待 R 键抬起
-    If (A_TimeSinceThisHotkey > 300) {
-        WinClose ahk_class #32770 ; Win + R 默认会打开运行窗口，关闭之
-        Run "D:\pathToScript\ceynri.ahk" ; 运行脚本（替换成你的脚本位置）
+#R::
+	KeyWait, R ; 等待 R 键抬起
+	If (A_TimeSinceThisHotkey > 300) {
+        ToolTip Reload Script
+        Sleep 300
+        ToolTip
+	    Reload
+    } Else {
+        Run "C:\Users\yangruichen\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk" ; 替换成你的脚本位置
     }
     Return
 ```
@@ -359,13 +363,12 @@ AdjustScreenBrightness(step) {
 按键：Win + E 长按
 
 ```ahk
-#~E::
+#E::
     KeyWait, E ; 等待 E 键抬起
     If (A_TimeSinceThisHotkey > 300) {
-        WinClose ahk_class CabinetWClass ; Win + R 默认会打开快速访问窗口，关闭之
-        Run cmd /K code "D:\pathToScript\ceynri.ahk" ; 使用 vs code 打开脚本（替换成你的脚本位置）
+        Run "C:\Users\Haze\AppData\Local\Programs\Microsoft VS Code\code.exe" "D:\ceynri\tools\ahk\ceynri.ahk" ; 使用 vs code 打开脚本（替换成你的脚本位置）
     }
-    Return
+Return
 ```
 
 <br>

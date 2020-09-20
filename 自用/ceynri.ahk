@@ -168,7 +168,7 @@ return
         ToolTip
 	    Reload
     } Else {
-        Run "C:\Users\yangruichen\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk"
+        Run "C:\Users\yangruichen\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk" ; 替换成你的脚本位置
     }
     Return
 ; ---------------------------------------------------------
