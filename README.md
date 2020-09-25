@@ -2,11 +2,13 @@
 
 简单介绍一下，AutoHotkey 是 windows 平台下的一款开源热键脚本语言，特点是编写自动化热键脚本非常容易。
 
-例如想要实现 Win + N 打开 Chrome 浏览器，只需要在一个文件里写一行代码，就可以放在后台运行：
+它有多简单？举个例子，比如我想要实现快捷键 Win + N 打开 Chrome 浏览器，只需要在一个文件里写一行代码：
 
 ```ahk
 #N::Run "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Google Chrome"
 ```
+
+将这个文件后缀名改为`.ahk`后，双击它即可将其放在后台运行，实现全局快捷键映射，且基本不消耗电脑性能。
 
 关于更多的语法，可以参考中文文档：<https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm>
 
@@ -21,6 +23,7 @@
 ### 直接映射
 
 按键：Win + Shift + C 打开 C 盘
+
 按键：Win + Shift + Z 打开桌面
 
 ```ahk
