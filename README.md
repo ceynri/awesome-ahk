@@ -10,7 +10,7 @@
 
 将这个文件后缀名改为`.ahk`后，双击它即可将其放在后台运行，实现全局快捷键映射，且基本不消耗电脑性能。
 
-关于更多的语法，可以参考中文文档：<https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm>
+关于它的安装使用方式以及更多的语法，可以参考中文文档：<https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm>
 
 下面是一些自己比较常用的代码，对于路径相关字符串请自行替换：
 
