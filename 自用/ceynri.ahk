@@ -1,6 +1,6 @@
 /**
  * @encode: gbk
- * @Author: ceynri
+ * @author: ceynri
  * @document: https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
  */
 
@@ -12,7 +12,7 @@
 ; ---------------------------------------------------------
 ; 创建Chrome浏览器新窗口
 ; ---------------------------------------------------------
-#N::Run "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Google Chrome"
+#N::Run "C:\Program Files\Google\Chrome\Application\chrome.exe"
 ; ---------------------------------------------------------
 
 ; ---------------------------------------------------------
@@ -137,8 +137,8 @@ Capslock & Space::Media_Play_Pause
 ; Win + O 关闭显示器
 ; ---------------------------------------------------------
 #O:: 
-Sleep 2000  ; 让用户有机会释放按键 (以防释放它们时再次唤醒显视器).
-SendMessage, 0x112, 0xF170, 2,, Program Manager   ; 关闭显示器: 0x112 为 WM_SYSCOMMAND, 0xF170 为 SC_MONITORPOWER. ; 可使用 -1 代替 2 打开显示器，1 代替 2 激活显示器的节能模式
+    Sleep 2000  ; 让用户有机会释放按键 (以防释放它们时再次唤醒显视器).
+    SendMessage, 0x112, 0xF170, 2,, Program Manager  ; 关闭显示器: 0x112 为 WM_SYSCOMMAND, 0xF170 为 SC_MONITORPOWER. ; 可使用 -1 代替 2 打开显示器，1 代替 2 激活显示器的节能模式
 return
 ; ---------------------------------------------------------
 
@@ -146,7 +146,7 @@ return
 ; Win + T 当前窗口置顶
 ; ---------------------------------------------------------
 #T::
-    winset, AlwaysOnTop, TOGGLE, A	;A在AutoHotkey里表示当前活动窗口的标题
+    winset, AlwaysOnTop, TOGGLE, A	; A在AutoHotkey里表示当前活动窗口的标题
     WinGet, ExStyle, ExStyle, A
     if (ExStyle & 0x8)  ; 0x8 为 WS_EX_TOPMOST.在WinGet的帮助中
         tooltip 置顶
