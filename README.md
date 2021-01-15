@@ -140,7 +140,7 @@ Return
     path := RegExReplace(path, "^地址: ", "") ; strip to bare address
     StringReplace, path, path, `r, , all ; Just in case - remove all carriage returns (`r)
 
-    Run cmd ; run powershell Start-Process powershell -Verb runAs 
+    Run cmd ; run powershell Start-Process powershell -Verb runAs
     Sleep 500
     IfInString path, \
         Send cd %path%
@@ -155,7 +155,7 @@ Return
 按键：Win + O
 
 ```ahk
-#O:: 
+#O::
     Sleep 2000 ; 让用户有机会释放按键 (以防释放它们时再次唤醒显视器).
     SendMessage, 0x112, 0xF170, 2,, Program Manager ; 关闭显示器: 0x112 为 WM_SYSCOMMAND, 0xF170 为 SC_MONITORPOWER. ; 可使用 -1 代替 2 打开显示器，1 代替 2 激活显示器的节能模式
 return
@@ -186,7 +186,7 @@ return
     }
     Else IfWinNotActive ahk_class OrpheusBrowserHost
         winActivate
-    Else 
+    Else
         winMinimize
 Return
 ```
@@ -343,14 +343,14 @@ AdjustScreenBrightness(step) {
 
 ```ahk
 #R::
-	KeyWait, R ; 等待 R 键抬起
-	If (A_TimeSinceThisHotkey > 300) {
+    KeyWait, R ; 等待 R 键抬起
+    If (A_TimeSinceThisHotkey > 300) {
         ToolTip Reload Script
         Sleep 300
         ToolTip
-	    Reload
+        Reload
     } Else {
-        Run "C:\Users\yangruichen\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk" ; 替换成你的脚本位置
+        Run "C:\Users\yangruichen\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk" ; 打开默认的运行窗口
     }
     Return
 ```
