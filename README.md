@@ -12,6 +12,15 @@
 
 关于它的安装使用方式以及更多的语法，可以参考中文文档：<https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm>
 
+> 提前提示：对于修饰键，AutoHotkey 有对应的简化符号如下所示：
+>
+> | 按键  | 对应符号 |
+> | :---: | :------: |
+> |  Win  |    #     |
+> | Shift |    +     |
+> |  Alt  |    !     |
+> | Ctrl  |    ^     |
+
 下面是一些自己比较常用的代码，对于路径相关字符串请自行替换：
 
 <br>
@@ -127,7 +136,7 @@ Return
 
 ### 在当前活跃窗口打开控制命令行
 
-这个代码有点搓，后续看下有没有好点的
+> 这个代码有点搓，可以自己看下有没有好点的
 
 ```ahk
 #C::
@@ -370,6 +379,8 @@ AdjustScreenBrightness(step) {
     KeyWait, E ; 等待 E 键抬起
     If (A_TimeSinceThisHotkey > 300) {
         Run "C:\Users\Haze\AppData\Local\Programs\Microsoft VS Code\code.exe" "D:\ceynri\tools\ahk\ceynri.ahk" ; 使用 vs code 打开脚本（替换成你的脚本位置）
+    } Else {
+        Run explorer
     }
 Return
 ```
