@@ -19,25 +19,31 @@ if not A_IsAdmin
     ExitApp
 }
 
+; 配置
+userDir := "C:\ceynri"
+sysUserDir := "C:\Users\ceynri"
+currentScript := "itx.ahk"
+
 #IfWinActive, ahk_exe Explorer.EXE
 ; ---------------------------------------------------------
 ; Win + H 显示/隐藏系统隐藏文件
 ; ---------------------------------------------------------
-#H::
+toggleSysHiddenFileDisplay() {
     If value = 1
         value := 2
     Else
         value = 1
     RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\, Hidden, %Value%
     Send {Browser_Refresh}
-    Return
+}
+#H::toggleSysHiddenFileDisplay()
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
 ; Win + Z 显示/隐藏桌面文件
 ; ---------------------------------------------------------
-#Z::
+toggleDesktopFileDisplay() {
     ControlGet, class, Hwnd,, SysListView321, ahk_class Progman
     If class = 
         ControlGet, class, Hwnd,, SysListView321, ahk_class WorkerW
@@ -45,41 +51,30 @@ if not A_IsAdmin
         WinHide, ahk_id %class%
     Else
         WinShow, ahk_id %class%
-    Return
+}
+#Z::toggleDesktopFileDisplay()
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
 ; Win + S 获得当前选中文件的路径（仅资源管理器/桌面下有效）
 ; ---------------------------------------------------------
-#S::
+getFilePath() {
     Send ^c
     clipboard = %clipboard%
     tooltip, %clipboard%
     sleep, 500
     tooltip
-    Return
+}
+#S::getFilePath()
 ; ---------------------------------------------------------
-
-
-; ; ---------------------------------------------------------
-; ; Win + V 用 VS Code选中的文件
-; ; ---------------------------------------------------------
-; #V::
-;     Send ^c
-;     Run cmd /K code %clipboard%
-;     Sleep 2000
-;     Send !{Tab}
-;     Sleep 100
-;     Send {AltDown}{F4}{AltUp}
-;     Return
-; ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
 ; Win + C 打开当前目录下的控制命令行
+; TODO: 改为更好的方法
 ; ---------------------------------------------------------
-#C::
+openPSOnCurrentDir() {
     WinGetText, path, A
     StringSplit, word_array, path, `n ; Split on newline (`n)
     path := word_array9
@@ -100,7 +95,8 @@ if not A_IsAdmin
         Send cd C:\
     }
     Send {Enter}
-    Return
+}
+#C::openPSOnCurrentDir()
 ; ---------------------------------------------------------
 #If ; End "#IfWinActive, ahk_exe Explorer.EXE"
 
@@ -108,18 +104,19 @@ if not A_IsAdmin
 ; ---------------------------------------------------------
 ; Win + O 关闭显示器
 ; ---------------------------------------------------------
-#O:: 
-Sleep 2000 ; 让用户有机会释放按键 (以防释放它们时再次唤醒显视器).
-SendMessage, 0x112, 0xF170, 2,, Program Manager ; 关闭显示器: 0x112 为 WM_SYSCOMMAND, 0xF170 为 SC_MONITORPOWER. ; 可使用 -1 代替 2 打开显示器，1 代替 2 激活显示器的节能模式
-return
+closeMonitor() {
+    Sleep 2000 ; 让用户有机会释放按键 (以防释放它们时再次唤醒显视器).
+    SendMessage, 0x112, 0xF170, 2,, Program Manager ; 关闭显示器: 0x112 为 WM_SYSCOMMAND, 0xF170 为 SC_MONITORPOWER. ; 可使用 -1 代替 2 打开显示器，1 代替 2 激活显示器的节能模式
+}
+#O::closeMonitor()
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
 ; Win + T 当前窗口置顶
 ; ---------------------------------------------------------
-#T::
-    winset, AlwaysOnTop, TOGGLE, A ; A在AutoHotkey里表示当前活动窗口的标题
+toggleCurrentWindowOnTop() {
+    WinSet, AlwaysOnTop, TOGGLE, A ; A在AutoHotkey里表示当前活动窗口的标题
     WinGet, ExStyle, ExStyle, A
     if (ExStyle & 0x8) ; 0x8 为 WS_EX_TOPMOST.在WinGet的帮助中
         tooltip 置顶
@@ -127,7 +124,8 @@ return
         ToolTip 取消置顶
     Sleep 1000
     ToolTip
-    Return
+}
+#T::toggleCurrentWindowOnTop()
 ; ---------------------------------------------------------
 
 
@@ -139,10 +137,10 @@ return
 
 
 ; ---------------------------------------------------------
-; Win [+ Shift ]+ F 打开 ceynri 文件夹
+; Win [+ Shift ]+ F 打开 userDir 文件夹
 ; ---------------------------------------------------------
-#F::Run C:\ceynri
-#+F::Run C:\ceynri
+#F::Run % userDir
+#+F::Run % userDir
 ; ---------------------------------------------------------
 ; Win + Shift + D 短按 打开 Downloads
 ;                 长按 打开 docs
@@ -150,42 +148,39 @@ return
 #+D::
     KeyWait, D
     If (A_TimeSinceThisHotkey < 300) {
-        Run C:\Users\ceynri\Downloads
+        Run % sysUserDir . "\Downloads"
     } Else {
-        Run C:\ceynri\docs
+        Run % userDir . "\docs"
     }
     Return
 ; ---------------------------------------------------------
 ; Win + Shift + T 打开Tools文件夹
 ; ---------------------------------------------------------
-#+T::Run C:\ceynri\tools
+#+T::Run % userDir . "\tools"
 ; ---------------------------------------------------------
 ; Win + Shift + P 打开 Pictures 文件夹
 ; ---------------------------------------------------------
-#+P::Run C:\ceynri\pictures
+#+P::Run % userDir . "\pictures"
 ; ---------------------------------------------------------
 ; Win + Shift + Z 打开Desktop文件夹
 ; ---------------------------------------------------------
-#+Z::Run C:\Users\ceynri\Desktop
-; ---------------------------------------------------------
-; Win + Shift + A 打开毕设文件夹
-; ---------------------------------------------------------
-#+A::Run C:\Users\ceynri\Desktop\毕设
+#+Z::Run % sysUserDir . "\Desktop"
 ; ---------------------------------------------------------
 ; Win + Shift + W 打开 workspace 文件夹
 ; ---------------------------------------------------------
-#+W::Run C:\ceynri\workspace\
+#+W::Run % userDir . "\workspace"
 ; ---------------------------------------------------------
 ; Win + Shift + N 打开 ceynri.cn 文件夹
 ; ---------------------------------------------------------
-#+N::Run C:\ceynri\workspace\ceynri.cn\
+#+N::Run % userDir . "\workspace\ceynri.cn"
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
 ; Win + C 打开控制命令行
+; TODO: 改为 window terminal 管理员模式
 ; ---------------------------------------------------------
-#C::Run C:\ceynri\tools\ahk-script\runcmd.exe
+; #C::
 ; ---------------------------------------------------------
 ; Win + K 打开控制面板
 ; ---------------------------------------------------------
@@ -200,15 +195,7 @@ return
 ; ---------------------------------------------------------
 ; Win + N 新建 Edge 窗口
 ; ---------------------------------------------------------
-#N::
-    KeyWait, N
-    If(A_TimeSinceThisHotkey < 300) {
-        ; Run "C:\Program Files\Google\Chrome\Application\chrome.exe"
-        Run "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-    } Else {
-        Run https://www1.szu.edu.cn/
-    }
-    Return
+#N::Run "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 ; ---------------------------------------------------------
 
 
@@ -218,7 +205,7 @@ return
 #M::
     IfWinNotExist ahk_class OrpheusBrowserHost
     {
-        Run C:\Program Files (x86)\Netease\CloudMusic\cloudmusic.exe
+        Run "C:\Program Files (x86)\Netease\CloudMusic\cloudmusic.exe"
         winActivate
     }
     Else IfWinNotActive ahk_class OrpheusBrowserHost
@@ -227,36 +214,6 @@ return
         winMinimize
     Return
 ; ---------------------------------------------------------
-
-
-; ---------------------------------------------------------
-; Win + G 打开Dr.com校园网登录页面
-; ---------------------------------------------------------
-; #G::Run C:\Drcom\DrUpdateClient\DrMain.exe
-#G::
-    KeyWait, G
-    If(A_TimeSinceThisHotkey < 300) {
-        Run "https://drcom.szu.edu.cn/a70.htm"
-    } Else {
-        Run "http://172.30.255.2/0.htm"
-    }
-    Return
-; ---------------------------------------------------------
-
-
-; ---------------------------------------------------------
-; Win + D 长按 创建新桌面
-; ---------------------------------------------------------
-#~D::
-    KeyWait, D
-    If (A_TimeSinceThisHotkey > 300) {
-        Send #{Tab}
-        Sleep 500
-        Send {Tab}{End}{Enter}{Esc}
-    }
-    Return
-; ---------------------------------------------------------
-
 
 
 ; ---------------------------------------------------------
@@ -371,7 +328,7 @@ AdjustScreenBrightness(step) {
         ToolTip
         Reload
     } Else {
-        Run "C:\Users\ceynri\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk"
+        Run % sysUserDir . "\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk"
     }
     Return
 ; ---------------------------------------------------------
@@ -383,7 +340,7 @@ AdjustScreenBrightness(step) {
 #E::
     KeyWait, E ; 等待 E 键抬起
     If (A_TimeSinceThisHotkey > 300) {
-        Run "C:\Users\ceynri\AppData\Local\Programs\Microsoft VS Code\code.exe" "C:\ceynri\workspace\autohotkey-script\自用\itx.ahk" ; 使用 vs code 打开脚本（替换成你的脚本位置）
+        Run "C:\Users\ceynri\AppData\Local\Programs\Microsoft VS Code\code.exe" %userDir%\workspace\awesome-ahk\自用\%currentScript% ; 使用 vs code 打开脚本（替换成你的脚"本位置）
     } Else {
         Run explorer
     }
