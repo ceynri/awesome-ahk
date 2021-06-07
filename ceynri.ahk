@@ -1,5 +1,11 @@
-
-; Notes:  # == win    ! == Alt    ^ == Ctrl    + == Shift
+/**
+ * @encode: gbk
+ * @author: ceynri
+ * @Project: https://github.com/ceynri/awesome-ahk
+ * @document: https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
+ *
+ * Notes:  # == win    ! == Alt    ^ == Ctrl    + == Shift
+ */
 
 #SingleInstance Force ; 重复启动的时候自动覆盖
 
@@ -22,7 +28,7 @@ if not A_IsAdmin
 ; 配置
 userDir := "C:\ceynri"
 sysUserDir := "C:\Users\ceynri"
-currentScript := "itx.ahk"
+currentScript := "ceynri.ahk"
 
 #IfWinActive, ahk_exe Explorer.EXE
 ; ---------------------------------------------------------
