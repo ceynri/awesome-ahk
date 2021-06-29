@@ -31,13 +31,13 @@
 
 ### 直接映射
 
-按键：Win + Shift + C 打开 C 盘
+按键：Win + Alt + C 打开 C 盘
 
-按键：Win + Shift + Z 打开桌面
+按键：Win + Alt + Z 打开桌面
 
 ```ahk
-#+C::Run "C:\"
-#+Z::Run "C:\pathToUserFile\Desktop"
+#!C::Run "C:\"
+#!Z::Run %A_Desktop%
 ```
 
 打开网页也是可以的：
@@ -57,13 +57,13 @@
 
 ### 短按/长按分别触发不同效果
 
-按键：Win + Shift + D
+按键：Win + Alt + D
 
 - 短按打开 Downloads 文件夹
 - 长按打开 docs 文件夹
 
 ```ahk
-#+D::
+#!D::
     KeyWait, D
     If (A_TimeSinceThisHotkey < 300) {
         ; 按下小于300ms，打开Downloads文件夹
