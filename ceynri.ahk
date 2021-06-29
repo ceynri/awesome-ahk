@@ -7,16 +7,16 @@
  * Notes:  # == win    ! == Alt    ^ == Ctrl    + == Shift
  */
 
-#SingleInstance Force  ; é‡å¤å¯åŠ¨çš„æ—¶å€™è‡ªåŠ¨è¦†ç›–
+#SingleInstance Force  ; ÖØ¸´Æô¶¯µÄÊ±ºò×Ô¶¯¸²¸Ç
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-; å…è®¸åœ¨2ç§’å†…è¿ç»­è§¦å‘100æ¬¡å¿«æ·é”®è€Œä¸è§¦å‘è­¦å‘Šå¯¹è¯æ¡†ï¼Œé¿å…é•¿æŒ‰æ–¹å‘é”®æ—¶å¼¹å‡ºè­¦å‘Š
+; ÔÊĞíÔÚ2ÃëÄÚÁ¬Ğø´¥·¢100´Î¿ì½İ¼ü¶ø²»´¥·¢¾¯¸æ¶Ô»°¿ò£¬±ÜÃâ³¤°´·½Ïò¼üÊ±µ¯³ö¾¯¸æ
 #HotkeyInterval 2000
 #MaxHotkeysPerInterval 100
 
-; æ£€æŸ¥ç®¡ç†å‘˜æƒé™ï¼Œæ²¡æœ‰åˆ™ä»¥ç®¡ç†å‘˜æƒé™é‡æ–°å¯åŠ¨è„šæœ¬ï¼Œé¿å…éƒ¨åˆ†æƒ…å†µä¸‹æ— æ³•ä½¿ç”¨ahk
+; ¼ì²é¹ÜÀíÔ±È¨ÏŞ£¬Ã»ÓĞÔòÒÔ¹ÜÀíÔ±È¨ÏŞÖØĞÂÆô¶¯½Å±¾£¬±ÜÃâ²¿·ÖÇé¿öÏÂÎŞ·¨Ê¹ÓÃahk
 full_command_line := DllCall("GetCommandLine", "str")
 
 if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
@@ -31,14 +31,14 @@ if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
     ExitApp
 }
 
-; é…ç½®
-userDir := "D:\ceynri"
-sysUserDir := "C:\Users\ceynri"
-currentScript := "ceynri.ahk"
+; ÅäÖÃ
+userDir := "C:\ceynri"
+sysUserDir := "C:\Users\" . A_UserName
 
 #IfWinActive, ahk_exe Explorer.EXE
+
 ; ---------------------------------------------------------
-; Win + H æ˜¾ç¤º/éšè—ç³»ç»Ÿéšè—æ–‡ä»¶
+; Win + H ÏÔÊ¾/Òş²ØÏµÍ³Òş²ØÎÄ¼ş
 ; ---------------------------------------------------------
 toggleSysHiddenFileDisplay() {
     If value = 1
@@ -53,7 +53,7 @@ toggleSysHiddenFileDisplay() {
 
 
 ; ---------------------------------------------------------
-; Win + Z æ˜¾ç¤º/éšè—æ¡Œé¢æ–‡ä»¶
+; Win + Z ÏÔÊ¾/Òş²Ø×ÀÃæÎÄ¼ş
 ; ---------------------------------------------------------
 toggleDesktopFileDisplay() {
     ControlGet, class, Hwnd,, SysListView321, ahk_class Progman
@@ -69,7 +69,7 @@ toggleDesktopFileDisplay() {
 
 
 ; ---------------------------------------------------------
-; Win + S è·å¾—å½“å‰é€‰ä¸­æ–‡ä»¶çš„è·¯å¾„ï¼ˆä»…èµ„æºç®¡ç†å™¨/æ¡Œé¢ä¸‹æœ‰æ•ˆï¼‰
+; Win + S »ñµÃµ±Ç°Ñ¡ÖĞÎÄ¼şµÄÂ·¾¶£¨½ö×ÊÔ´¹ÜÀíÆ÷/×ÀÃæÏÂÓĞĞ§£©
 ; ---------------------------------------------------------
 getFilePath() {
     Send ^c
@@ -81,59 +81,30 @@ getFilePath() {
 #S::getFilePath()
 ; ---------------------------------------------------------
 
-
-; ---------------------------------------------------------
-; Win + C æ‰“å¼€å½“å‰ç›®å½•ä¸‹çš„æ§åˆ¶å‘½ä»¤è¡Œ
-; TODO: æ”¹ä¸ºæ›´å¥½çš„æ–¹æ³•
-; ---------------------------------------------------------
-openPSOnCurrentDir() {
-    WinGetText, path, A
-    StringSplit, word_array, path, `n ; Split on newline (`n)
-    path := word_array9
-    ToolTip %word_array9%
-    Sleep 500
-    ToolTip
-    path := RegExReplace(path, "^åœ°å€: ", "") ; strip to bare address
-    StringReplace, path, path, `r, , all ; Just in case - remove all carriage returns (`r)
-
-    Run cmd ; run powershell Start-Process powershell -Verb runAs 
-    Sleep 500
-    IfInString path, \
-    {
-        Send cd %path%
-    }
-    else
-    {
-        Send cd C:\
-    }
-    Send {Enter}
-}
-#C::openPSOnCurrentDir()
-; ---------------------------------------------------------
 #If ; End "#IfWinActive, ahk_exe Explorer.EXE"
 
 
 ; ---------------------------------------------------------
-; Win + O å…³é—­æ˜¾ç¤ºå™¨
+; Win + O ¹Ø±ÕÏÔÊ¾Æ÷
 ; ---------------------------------------------------------
 closeMonitor() {
-    Sleep 2000 ; è®©ç”¨æˆ·æœ‰æœºä¼šé‡Šæ”¾æŒ‰é”® (ä»¥é˜²é‡Šæ”¾å®ƒä»¬æ—¶å†æ¬¡å”¤é†’æ˜¾è§†å™¨).
-    SendMessage, 0x112, 0xF170, 2,, Program Manager ; å…³é—­æ˜¾ç¤ºå™¨: 0x112 ä¸º WM_SYSCOMMAND, 0xF170 ä¸º SC_MONITORPOWER. ; å¯ä½¿ç”¨ -1 ä»£æ›¿ 2 æ‰“å¼€æ˜¾ç¤ºå™¨ï¼Œ1 ä»£æ›¿ 2 æ¿€æ´»æ˜¾ç¤ºå™¨çš„èŠ‚èƒ½æ¨¡å¼
+    Sleep 2000 ; ÈÃÓÃ»§ÓĞ»ú»áÊÍ·Å°´¼ü (ÒÔ·ÀÊÍ·ÅËüÃÇÊ±ÔÙ´Î»½ĞÑÏÔÊÓÆ÷).
+    SendMessage, 0x112, 0xF170, 2,, Program Manager ; ¹Ø±ÕÏÔÊ¾Æ÷: 0x112 Îª WM_SYSCOMMAND, 0xF170 Îª SC_MONITORPOWER. ; ¿ÉÊ¹ÓÃ -1 ´úÌæ 2 ´ò¿ªÏÔÊ¾Æ÷£¬1 ´úÌæ 2 ¼¤»îÏÔÊ¾Æ÷µÄ½ÚÄÜÄ£Ê½
 }
 #O::closeMonitor()
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
-; Win + T å½“å‰çª—å£ç½®é¡¶
+; Win + T µ±Ç°´°¿ÚÖÃ¶¥
 ; ---------------------------------------------------------
 toggleCurrentWindowOnTop() {
-    WinSet, AlwaysOnTop, TOGGLE, A ; Aåœ¨AutoHotkeyé‡Œè¡¨ç¤ºå½“å‰æ´»åŠ¨çª—å£çš„æ ‡é¢˜
+    WinSet, AlwaysOnTop, TOGGLE, A ; AÔÚAutoHotkeyÀï±íÊ¾µ±Ç°»î¶¯´°¿ÚµÄ±êÌâ
     WinGet, ExStyle, ExStyle, A
-    if (ExStyle & 0x8) ; 0x8 ä¸º WS_EX_TOPMOST.åœ¨WinGetçš„å¸®åŠ©ä¸­
-        tooltip ç½®é¡¶
+    if (ExStyle & 0x8) ; 0x8 Îª WS_EX_TOPMOST.ÔÚWinGetµÄ°ïÖúÖĞ
+        tooltip ÖÃ¶¥
     else
-        ToolTip å–æ¶ˆç½®é¡¶
+        ToolTip È¡ÏûÖÃ¶¥
     Sleep 1000
     ToolTip
 }
@@ -142,77 +113,77 @@ toggleCurrentWindowOnTop() {
 
 
 ; ---------------------------------------------------------
-; Win + J è®¡ç®—å™¨
+; Win + J ¼ÆËãÆ÷
 ; ---------------------------------------------------------
 #J::Run calc
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
-; Win [+ Shift ]+ F æ‰“å¼€ userDir æ–‡ä»¶å¤¹
+; Win [+ Alt ]+ F ´ò¿ª userDir ÎÄ¼ş¼Ğ
 ; ---------------------------------------------------------
-#F::Run % userDir
-#+F::Run % userDir
+#F::Run explore %userDir%
+#!F::Run explore %userDir%
 ; ---------------------------------------------------------
-; Win + Shift + D çŸ­æŒ‰ æ‰“å¼€ Downloads
-;                 é•¿æŒ‰ æ‰“å¼€ docs
+; Win + Alt + D ¶Ì°´ ´ò¿ª Downloads
+;                 ³¤°´ ´ò¿ª docs
 ; ---------------------------------------------------------
-#+D::
+#!D::
     KeyWait, D
     If (A_TimeSinceThisHotkey < 300) {
-        Run % sysUserDir . "\Downloads"
+        Run explore "%sysUserDir%\downloads"
     } Else {
-        Run % userDir . "\docs"
+        Run explore "%userDir%\docs"
     }
     Return
 ; ---------------------------------------------------------
-; Win + Shift + T æ‰“å¼€Toolsæ–‡ä»¶å¤¹
+; Win + Alt + T ´ò¿ªToolsÎÄ¼ş¼Ğ
 ; ---------------------------------------------------------
-#+T::Run % userDir . "\tools"
+#!T::Run explore "%userDir%\tools"
 ; ---------------------------------------------------------
-; Win + Shift + P æ‰“å¼€ Pictures æ–‡ä»¶å¤¹
+; Win + Alt + P ´ò¿ª Pictures ÎÄ¼ş¼Ğ
 ; ---------------------------------------------------------
-#+P::Run % userDir . "\pictures"
+#!P::Run explore "%userDir%\pictures"
 ; ---------------------------------------------------------
-; Win + Shift + Z æ‰“å¼€Desktopæ–‡ä»¶å¤¹
+; Win + Alt + Z ´ò¿ªDesktopÎÄ¼ş¼Ğ
 ; ---------------------------------------------------------
-#+Z::Run % sysUserDir . "\Desktop"
+#!Z::Run explore %A_Desktop%
 ; ---------------------------------------------------------
-; Win + Shift + W æ‰“å¼€ workspace æ–‡ä»¶å¤¹
+; Win + Alt + W ´ò¿ª workspace ÎÄ¼ş¼Ğ
 ; ---------------------------------------------------------
-#+W::Run % userDir . "\workspace"
+#!W::Run explore "%userDir%\workspace"
 ; ---------------------------------------------------------
-; Win + Shift + N æ‰“å¼€ ceynri.cn æ–‡ä»¶å¤¹
+; Win + Alt + N ´ò¿ª ceynri.cn ÎÄ¼ş¼Ğ
 ; ---------------------------------------------------------
-#+N::Run % userDir . "\workspace\ceynri.cn"
+#!N::Run explore "%userDir%\workspace\ceynri.cn"
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
-; Win + C æ‰“å¼€æ§åˆ¶å‘½ä»¤è¡Œ
-; TODO: æ”¹ä¸º window terminal ç®¡ç†å‘˜æ¨¡å¼
+; Win + C ´ò¿ª¿ØÖÆÃüÁîĞĞ
+; TODO: ¸ÄÎª window terminal ¹ÜÀíÔ±Ä£Ê½
 ; ---------------------------------------------------------
 ; #C::
 ; ---------------------------------------------------------
-; Win + K æ‰“å¼€æ§åˆ¶é¢æ¿
+; Win + K ´ò¿ª¿ØÖÆÃæ°å
 ; ---------------------------------------------------------
 #K::Run control.exe
 ; ---------------------------------------------------------
-; Win + Y æ‰“å¼€ç¨‹åºä¸åŠŸèƒ½
+; Win + Y ´ò¿ª³ÌĞòÓë¹¦ÄÜ
 ; ---------------------------------------------------------
 #Y::Run control.exe /name Microsoft.ProgramsAndFeatures
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
-; Win + N æ–°å»º Edge çª—å£
+; Win + N ĞÂ½¨ Edge ´°¿Ú
 ; ---------------------------------------------------------
 #N::Run "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
-; Win + M æ‰“å¼€ç½‘æ˜“äº‘éŸ³ä¹
+; Win + M ´ò¿ªÍøÒ×ÔÆÒôÀÖ
 ; ---------------------------------------------------------
 #M::
     IfWinNotExist ahk_class OrpheusBrowserHost
@@ -229,13 +200,15 @@ toggleCurrentWindowOnTop() {
 
 
 ; ---------------------------------------------------------
-; å°† CapsLock æ›¿æ¢ä¸º Alt + CapsLock
+; ½« CapsLock Ìæ»»Îª Alt + CapsLock
 ; ---------------------------------------------------------
 CapsLock::Return
-; å·¦Altã€Ctrlä¿®é¥°é”®å¸¸ä¸ Capslock é”®ä¸€åŒä½¿ç”¨ï¼Œä½†å¦‚æœæ²¡æœ‰æŒ‰ä¸‹èƒ½ä¸ Capslock é…åˆçš„é”®åˆ™ä¼šç»•è¿‡ä¸Šé¢çš„è§„åˆ™è§¦å‘å¤§å†™é”å®šï¼Œæ•…ç¦ç”¨
+
+; ×óAlt¡¢CtrlĞŞÊÎ¼ü³£Óë Capslock ¼üÒ»Í¬Ê¹ÓÃ£¬µ«Èç¹ûÃ»ÓĞ°´ÏÂÄÜÓë Capslock ÅäºÏµÄ¼üÔò»áÈÆ¹ıÉÏÃæµÄ¹æÔò´¥·¢´óĞ´Ëø¶¨£¬¹Ê½ûÓÃ
 <!Capslock::Return
 <^Capslock::Return
-; Win/Right Alt + Capslock ä»£æ›¿å¤§å†™é”®
+
+; Win/Right Alt + Capslock ´úÌæ´óĞ´¼ü
 #Capslock::
 >!Capslock::
     isCaps = % GetKeyState("CapsLock", "T")
@@ -248,7 +221,7 @@ CapsLock::Return
     }
 Return
 ; ---------------------------------------------------------
-; ä¸º60%æˆ–65%é”®ç›˜è¿›è¡ŒFåŒºæ˜ å°„ï¼ˆç±»ä¼¼Fné”®çš„é€»è¾‘ï¼‰
+; Îª60%»ò65%¼üÅÌ½øĞĞFÇøÓ³Éä£¨ÀàËÆFn¼üµÄÂß¼­£©
 ; ---------------------------------------------------------
 Capslock & Esc::`
 Capslock & 1::F1
@@ -266,32 +239,33 @@ Capslock & +::F12
 Capslock & ,::Home
 Capslock & .::End
 ; ---------------------------------------------------------
-; ç”¨ Capslock + W/A/S/Dæ§åˆ¶ä¸Šä¸‹å·¦å³
+; ÓÃ Capslock + W/A/S/D¿ØÖÆÉÏÏÂ×óÓÒ
 ; ---------------------------------------------------------
 Capslock & W::Up
 Capslock & A::Left
 Capslock & S::Down
 Capslock & D::Right
 ; ---------------------------------------------------------
-; ç”¨ Capslock + Q/E/T/Gæ§åˆ¶ä½ç½®
+; ÓÃ Capslock + Q/E/T/G¿ØÖÆÎ»ÖÃ
 ; ---------------------------------------------------------
 Capslock & Q::Home
 Capslock & E::End
 Capslock & T::PgUp
 Capslock & G::PgDn
 ; ---------------------------------------------------------
-; åˆ©ç”¨Capslock + R/Fè°ƒèŠ‚éŸ³é‡
+; ÀûÓÃCapslock + R/Fµ÷½ÚÒôÁ¿
 ; ---------------------------------------------------------
 Capslock & R::Send {Volume_Up 1}
 Capslock & F::Send {Volume_Down 1}
 ; ---------------------------------------------------------
-; åˆ©ç”¨Capslock + Z/Xåˆ‡æ¢æ­Œæ›²  Capslock + Spaceæš‚åœéŸ³ä¹
+; ÀûÓÃCapslock + Z/XÇĞ»»¸èÇú  Capslock + SpaceÔİÍ£ÒôÀÖ
 ; ---------------------------------------------------------
 Capslock & Z::Media_Prev
 Capslock & X::Media_Next
 Capslock & Space::Media_Play_Pause
 ; ---------------------------------------------------------
-; åˆ©ç”¨Capslock + C/Vè°ƒèŠ‚äº®åº¦ï¼ˆå¤‡ç”¨ï¼šWin + Up/Downï¼‰
+; ÀûÓÃCapslock + C/Vµ÷½ÚÁÁ¶È£¨±¸ÓÃ£ºWin + Up/Down£©
+; Ò»°ã½ö±Ê¼Ç±¾µçÄÔÓĞĞ§
 ; ---------------------------------------------------------
 Capslock & C::
 LWin & Down::
@@ -330,7 +304,7 @@ AdjustScreenBrightness(step) {
 
 
 ; ---------------------------------------------------------
-; Win + R é•¿æŒ‰ é‡å¯è¯¥è„šæœ¬
+; Win + R ³¤°´ ÖØÆô¸Ã½Å±¾
 ; ---------------------------------------------------------
 #R::
     KeyWait, R
@@ -340,19 +314,19 @@ AdjustScreenBrightness(step) {
         ToolTip
         Reload
     } Else {
-        Run % sysUserDir . "\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\System Tools\Run.lnk"
+        Run "%A_Programs%\System Tools\Run.lnk"
     }
     Return
 ; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
-; Win + E é•¿æŒ‰ ä¿®æ”¹è¯¥è„šæœ¬
+; Win + E ³¤°´ ĞŞ¸Ä¸Ã½Å±¾
 ; ---------------------------------------------------------
 #E::
-    KeyWait, E ; ç­‰å¾… E é”®æŠ¬èµ·
+    KeyWait, E ; µÈ´ı E ¼üÌ§Æğ
     If (A_TimeSinceThisHotkey > 300) {
-        Run "C:\Users\ceynri\AppData\Local\Programs\Microsoft VS Code\code.exe" %userDir%\workspace\awesome-ahk\%currentScript% ; ä½¿ç”¨ vs code æ‰“å¼€è„šæœ¬ï¼ˆæ›¿æ¢æˆä½ çš„è„š"æœ¬ä½ç½®ï¼‰
+        Run "%sysUserDir%\AppData\Local\Programs\Microsoft VS Code\code.exe" %A_ScriptDir% ; Ê¹ÓÃ vs code ´ò¿ªahkÏîÄ¿
     } Else {
         Run explorer
     }
