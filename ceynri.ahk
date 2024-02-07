@@ -126,14 +126,14 @@ toggleCurrentWindowOnTop() {
 #!F::Run explore %userDir%
 ; ---------------------------------------------------------
 ; Win + Alt + D 短按 打开 Downloads
-;                 长按 打开 docs
+;                 长按 打开 documents
 ; ---------------------------------------------------------
 #!D::
     KeyWait, D
     If (A_TimeSinceThisHotkey < 300) {
         Run explore "%sysUserDir%\downloads"
     } Else {
-        Run explore "%userDir%\docs"
+        Run explore "%userDir%\documents"
     }
     Return
 ; ---------------------------------------------------------
@@ -187,7 +187,7 @@ toggleCurrentWindowOnTop() {
 #M::
     IfWinNotExist ahk_class OrpheusBrowserHost
     {
-        Run "C:\Program Files (x86)\Netease\CloudMusic\cloudmusic.exe"
+        Run "C:\Program Files\NetEase\CloudMusic\cloudmusic.exe"
         winActivate
     }
     Else IfWinNotActive ahk_class OrpheusBrowserHost
@@ -300,6 +300,14 @@ AdjustScreenBrightness(step) {
     }
 }
 ; ---------------------------------------------------------
+
+
+; ---------------------------------------------------------
+; Alt + [/] 直角引号输入
+; ---------------------------------------------------------
+
+![::Send 「
+!]::Send 」
 
 
 ; ---------------------------------------------------------
