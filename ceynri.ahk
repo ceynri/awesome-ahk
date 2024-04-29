@@ -1,8 +1,8 @@
 /**
- * @encode: gbk
- * @author: ceynri
- * @Project: https://github.com/ceynri/awesome-ahk
- * @document: https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
+ * @author ceynri
+ * @encoded GB2312
+ * @project https://github.com/ceynri/awesome-ahk
+ * @document https://wyagd001.github.io/zh-cn/docs/AutoHotkey.htm
  *
  * Notes:  # == win    ! == Alt    ^ == Ctrl    + == Shift
  */
@@ -17,19 +17,23 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #MaxHotkeysPerInterval 100
 
 ; 检查管理员权限，没有则以管理员权限重新启动脚本，避免部分情况下无法使用ahk
-full_command_line := DllCall("GetCommandLine", "str")
-
-if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
-{
-    try
+checkRunAsAdministrator() {
+    full_command_line := DllCall("GetCommandLine", "str")
+    
+    if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
     {
-        if A_IsCompiled
-            Run *RunAs "%A_ScriptFullPath%" /restart
-        else
-            Run *RunAs "%A_AhkPath%" /restart "%A_ScriptFullPath%"
+        try
+        {
+            if A_IsCompiled
+                Run *RunAs "%A_ScriptFullPath%" /restart
+            else
+                Run *RunAs "%A_AhkPath%" /restart "%A_ScriptFullPath%"
+        }
+        ExitApp
     }
-    ExitApp
 }
+; 这里不再启用，因为启用后跑任意程序都是以管理员权限跑，会导致 VSCode 无法多开等问题
+; checkRunAsAdministrator()
 
 ; 配置
 userDir := "C:\ceynri"
@@ -89,7 +93,7 @@ getFilePath() {
 ; ---------------------------------------------------------
 closeMonitor() {
     Sleep 2000 ; 让用户有机会释放按键 (以防释放它们时再次唤醒显视器).
-    SendMessage, 0x112, 0xF170, 2,, Program Manager ; 关闭显示器: 0x112 为 WM_SYSCOMMAND, 0xF170 为 SC_MONITORPOWER. ; 可使用 -1 代替 2 打开显示器，1 代替 2 激活显示器的节能模式
+    SendMessage, 0x112, 0xF170, 2,, Program Manager ; 关闭显示器 0x112 为 WM_SYSCOMMAND, 0xF170 为 SC_MONITORPOWER. 可使用 -1 代替 2 打开显示器，1 代替 2 激活活显示器的节能模式
 }
 #O::closeMonitor()
 ; ---------------------------------------------------------
@@ -305,9 +309,9 @@ AdjustScreenBrightness(step) {
 ; ---------------------------------------------------------
 ; Alt + [/] 直角引号输入
 ; ---------------------------------------------------------
-
 ![::Send 「
 !]::Send 」
+; ---------------------------------------------------------
 
 
 ; ---------------------------------------------------------
@@ -331,13 +335,13 @@ AdjustScreenBrightness(step) {
 ; Win + E 长按 修改该脚本
 ; ---------------------------------------------------------
 #E::
-    KeyWait, E ; 等待 E 键抬起
+    KeyWait, E
     If (A_TimeSinceThisHotkey > 300) {
-        Run "%sysUserDir%\AppData\Local\Programs\Microsoft VS Code\code.exe" %A_ScriptDir% ; 使用 vs code 打开ahk项目
+        Run "%sysUserDir%\AppData\Local\Programs\Microsoft VS Code\code.exe" %A_ScriptDir%
     } Else {
         Run explorer
     }
-Return
+    Return
 ; ---------------------------------------------------------
 
 
